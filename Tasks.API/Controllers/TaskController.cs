@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Tasks.Application.UseCases.Task.GetAll;
 using Tasks.Application.UseCases.Task.GetById;
 using Tasks.Communication.Responses;
 
@@ -10,9 +11,14 @@ namespace Tasks.API.Controllers
     public class TaskController : ControllerBase
     {
         [HttpGet]
+        [ProducesResponseType(typeof(List<ResponseShortTaskJson>), StatusCodes.Status200OK)]
         public IActionResult Get()
         {
-            return Ok();
+            var useCase = new GetAllTasksUseCase();
+            
+            var tasks = useCase.Execute();
+            
+            return Ok(tasks);
         }
 
         [HttpGet("{id}")]
