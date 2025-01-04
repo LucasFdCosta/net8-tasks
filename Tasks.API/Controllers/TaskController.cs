@@ -1,7 +1,11 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Tasks.Application.UseCases.Task.Delete;
 using Tasks.Application.UseCases.Task.GetAll;
 using Tasks.Application.UseCases.Task.GetById;
+using Tasks.Application.UseCases.Task.Register;
+using Tasks.Application.UseCases.Task.Update;
+using Tasks.Communication.Requests;
 using Tasks.Communication.Responses;
 
 namespace Tasks.API.Controllers
@@ -34,22 +38,39 @@ namespace Tasks.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] string value)
+        [ProducesResponseType(typeof(ResponseTaskJson), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ResponseErrorsJson), StatusCodes.Status400BadRequest)]
+        public IActionResult Post([FromBody] RequestTaskJson request)
         {
-            return Ok();
+            var useCase = new RegisterTaskUseCase();
+            
+            var task = useCase.Execute(request);
+
+            return Created(string.Empty, task);
         }
 
-        [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] string value)
+        [HttpPut("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ResponseErrorsJson), StatusCodes.Status400BadRequest)]
+        public IActionResult Put(int id, [FromBody] RequestTaskJson request)
         {
-            return Ok();
-
+            var useCase = new UpdateTaskUseCase();
+            
+            useCase.Execute(id, request);
+            
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ResponseErrorsJson), StatusCodes.Status404NotFound)]
         public IActionResult Delete(int id)
         {
-            return Ok();
+            var useCase = new DeleteTaskUseCase();
+            
+            useCase.Execute(id);
+            
+            return NoContent();
         }
     }
 }

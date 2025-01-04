@@ -12,12 +12,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="UseCases\Task\Delete\" />
-      <Folder Include="UseCases\Task\Register\" />
-      <Folder Include="UseCases\Task\Update\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\Tasks.Communication\Tasks.Communication.csproj" />
     </ItemGroup>
 
